@@ -22,11 +22,15 @@ import (
 
 // @host petstore.swagger.io
 // @BasePath /v2
+
 func main() {
+
 	r := gin.New()
 
 	// use ginSwagger middleware to
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	//r.POST("/user", users.CreateUser)
 
 	r.Run()
 }
