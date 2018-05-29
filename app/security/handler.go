@@ -7,15 +7,19 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+
+	"github.com/spf13/viper"
 )
 
 // EncryptWithAES ...
 func EncryptWithAES(text string) (string, error) {
 
-	block, err := aes.NewCipher([]byte("as"))
+	key := fmt.Sprintf("%v", viper.Get("aes.key"))
+
+	block, err := aes.NewCipher([]byte(key))
 
 	if err != nil {
-		return "", err
+		return "error", err
 	}
 
 	textToByte := []byte(text)
@@ -26,13 +30,11 @@ func EncryptWithAES(text string) (string, error) {
 
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 
-		return "", err
+		return "aa", err
 	}
 
 	stream := cipher.NewCFBEncrypter(block, iv)
 	stream.XORKeyStream(cipherByte[aes.BlockSize:], textToByte)
-
-	fmt.Println(base64.URLEncoding.EncodeToString(cipherByte))
 
 	return base64.URLEncoding.EncodeToString(cipherByte), nil
 
@@ -47,8 +49,8 @@ func DecryptWithAES(crypto string) (string, error) {
 		return "", err
 	}
 
-	key := []byte("86F7E437FAA5A7FCE15D1DDCB9EAEAEA377667B81B7FEEA3")
-	block, err := aes.NewCipher(key)
+	key := fmt.Sprintf("%v", viper.Get("aes.key"))
+	block, err := aes.NewCipher([]byte(key))
 
 	if err != nil {
 		return "", err
