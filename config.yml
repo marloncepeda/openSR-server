@@ -3,8 +3,8 @@ database:
   database: "science"
   username: "ctreminio"
   password: "ctreminio"
-  port: 222
+  port: 5432
   ssl: "disable"
 
-server:
-  port: 8080
+aes:
+  key: "@@$^Ze4s84t$"K&t&J+P;+/HFq4r9eqn"

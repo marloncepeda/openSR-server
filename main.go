@@ -1,31 +1,33 @@
 package main
 
 import (
-	"github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"fmt"
 
 	// swagger docs
+
+	"github.com/ctreminiom/scientific-logs-api/app"
 	_ "github.com/ctreminiom/scientific-logs-api/docs"
 
-	"github.com/gin-gonic/gin"
-
 	// GORM postgres driver
+
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 func main() {
 
-	r := gin.New()
+	//r := gin.New()
 
 	// Load configuration files
-	//yaml, err := app.Config()
+	yaml, _ := app.Config()
 
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
+	fmt.Println(yaml)
+
+	//fmt.Println(security.EncryptWithAES("Caros Treminio"))
 
 	// Connect to the database
 	//db, _ := gorm.Open("postgres", app.FormatSQLConnectionURL(yaml))
+
+	//fmt.Println(db)
 
 	//if err != nil {
 	//	log.Panic(err)
@@ -33,9 +35,9 @@ func main() {
 
 	//Init API
 
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	//	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	r.Run()
+	//	r.Run()
 
 	/*
 

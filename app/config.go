@@ -1,8 +1,6 @@
 package app
 
 import (
-	"fmt"
-
 	"github.com/ctreminiom/scientific-logs-api/config"
 	"github.com/spf13/viper"
 )
@@ -30,6 +28,7 @@ func Config() (data *config.Configuration, err error) {
 	return &env, nil
 }
 
+/*
 // FormatSQLConnectionURL ...
 func FormatSQLConnectionURL(data *config.Configuration) string {
 
@@ -38,3 +37,6 @@ func FormatSQLConnectionURL(data *config.Configuration) string {
 		data.Database.Username, data.Database.Database,
 		data.Database.SSL, data.Database.Password)
 }
+
+
+*/
