@@ -21,11 +21,16 @@ func LoadConfigurationVariables() {
 	fmt.Printf("Using config: %s\n", viper.ConfigFileUsed())
 }
 
-// FormatSQLConnectionURL ...
-func FormatSQLConnectionURL() string {
-
-	return fmt.Sprintf("host=%s port=%v user=%s dbname=%s sslmode=%s password=%s",
-		viper.Get("database.host"), viper.GetInt("database.port"),
-		viper.Get("database.username"), viper.Get("database.database"),
-		viper.Get("database.ssl"), viper.Get("database.password"))
+// FormatSQLAddressConnection ...
+func FormatSQLAddressConnection() string {
+	return fmt.Sprintf("%s:%v", viper.Get("database.host"), viper.Get("database.port"))
 }
+
+// GetDatabaseUsername ...
+func GetDatabaseUsername() string { return fmt.Sprintf("%s", viper.Get("database.username")) }
+
+// GetDatabasePassword ...
+func GetDatabasePassword() string { return fmt.Sprintf("%s", viper.Get("database.password")) }
+
+// GetDatabaseDatabase ...
+func GetDatabaseDatabase() string { return fmt.Sprintf("%s", viper.Get("database.database")) }

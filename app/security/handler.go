@@ -12,14 +12,14 @@ import (
 )
 
 // EncryptWithAES ...
-func EncryptWithAES(text string) (string, error) {
+func EncryptWithAES(text string) string {
 
 	key := fmt.Sprintf("%v", viper.Get("aes.key"))
 
 	block, err := aes.NewCipher([]byte(key))
 
 	if err != nil {
-		return "error", err
+		return "error"
 	}
 
 	textToByte := []byte(text)
@@ -30,13 +30,13 @@ func EncryptWithAES(text string) (string, error) {
 
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 
-		return "aa", err
+		return "aa"
 	}
 
 	stream := cipher.NewCFBEncrypter(block, iv)
 	stream.XORKeyStream(cipherByte[aes.BlockSize:], textToByte)
 
-	return base64.URLEncoding.EncodeToString(cipherByte), nil
+	return base64.URLEncoding.EncodeToString(cipherByte)
 
 }
 

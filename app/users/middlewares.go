@@ -1,35 +1,31 @@
 package users
 
-import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
-	"encoding/base64"
-	"io"
-)
+import "github.com/ctreminiom/scientific-logs-api/app/security"
 
-var key = []byte("example key 1234")
+func encrypt(user People) *People {
 
-func encrypt(data string) string {
-
-	block, err := aes.NewCipher(key)
-
-	if err != nil {
-		panic(err)
+	data := People{
+		ID:            user.ID,
+		Consecutive:   security.EncryptWithAES(user.Consecutive),
+		Name:          security.EncryptWithAES(user.Name),
+		SurName:       security.EncryptWithAES(user.SurName),
+		SecondSurName: security.EncryptWithAES(user.SecondSurName),
+		Phone:         security.EncryptWithAES(user.Phone),
+		UserName:      security.EncryptWithAES(user.UserName),
+		Password:      security.EncryptWithAES(user.Name),
 	}
 
-	dataAsByte := []byte(data)
-	cipherData := make([]byte, aes.BlockSize+len(dataAsByte))
-
-	iv := cipherData[:aes.BlockSize]
-
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		panic(err)
-	}
-
-	stream := cipher.NewCFBEncrypter(block, iv)
-	stream.XORKeyStream(cipherData[aes.BlockSize:], dataAsByte)
-
-	return base64.URLEncoding.EncodeToString(cipherData)
-
+	return &data
 }
+
+/*
+
+	Consecutive:   12,
+	Name:          json.Name,
+	SurName:       json.Surname,
+	SecondSurName: json.SecondSurname,
+	Phone:         json.Phone,
+	UserName:      json.Username,
+	Password:      json.Password}
+
+*/
