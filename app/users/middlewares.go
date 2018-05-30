@@ -5,7 +5,7 @@ import "github.com/ctreminiom/scientific-logs-api/app/security"
 func encrypt(user People) *People {
 
 	data := People{
-		ID:            user.ID,
+		ID:            security.EncryptWithAES(user.ID),
 		Consecutive:   security.EncryptWithAES(user.Consecutive),
 		Name:          security.EncryptWithAES(user.Name),
 		SurName:       security.EncryptWithAES(user.SurName),
@@ -17,15 +17,3 @@ func encrypt(user People) *People {
 
 	return &data
 }
-
-/*
-
-	Consecutive:   12,
-	Name:          json.Name,
-	SurName:       json.Surname,
-	SecondSurName: json.SecondSurname,
-	Phone:         json.Phone,
-	UserName:      json.Username,
-	Password:      json.Password}
-
-*/

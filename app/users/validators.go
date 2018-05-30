@@ -1,15 +1,19 @@
 package users
 
-type loginModel struct {
-	User     string `form:"user" json:"user" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
-}
+import (
+	"github.com/go-pg/pg"
+)
 
-type registerModel struct {
-	Name          string `form:"name" json:"name" binding:"required"`
-	Surname       string `form:"surname" json:"surname" binding:"required"`
-	SecondSurname string `form:"secondSurname" json:"secondSurname" binding:"required"`
-	Phone         string `form:"phone" json:"phone" binding:"required"`
-	Username      string `form:"username" json:"username" binding:"required"`
-	Password      string `form:"password" json:"password" binding:"required"`
+func create(user People, db *pg.DB) error {
+
+	userEncrypted := encrypt(user)
+
+	err := db.Insert(userEncrypted)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
