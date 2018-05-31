@@ -1,9 +1,7 @@
 package main
 
 import (
-	"log"
-	"time"
-
+	"github.com/ctreminiom/scientific-logs-api/app/postgresql"
 	"github.com/ctreminiom/scientific-logs-api/app/users"
 	"github.com/go-pg/pg"
 	"github.com/go-pg/pg/orm"
@@ -25,37 +23,16 @@ func main() {
 	config.LoadConfigurationVariables()
 
 	//Connect to the database
+	db := postgresql.Connect()
+	postgresql.Logger()
 
-	db2 := pg.Connect(&pg.Options{
-
-		Addr:     config.FormatSQLAddressConnection(),
-		User:     config.GetDatabaseUsername(),
-		Password: config.GetDatabasePassword(),
-		Database: config.GetDatabaseDatabase(),
-	})
-
-	defer db2.Close()
-
-	db2.OnQueryProcessed(func(event *pg.QueryProcessedEvent) {
-		query, err := event.FormattedQuery()
-		if err != nil {
-			panic(err)
-		}
-
-		log.Printf("%s %s", time.Since(event.StartTime), query)
-	})
-
-	err := createSchemas(db2)
-
-	if err != nil {
-		log.Panic(err)
-	}
-
+	//Setup gin instance
 	r := gin.New()
+	r.Use(gin.Logger())
 
-	users.Routes(r, db2)
+	//Import routes
+	users.Routes(r, db)
 
-	//users.Routes(r, db)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r.Run()
