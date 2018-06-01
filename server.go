@@ -11,6 +11,7 @@ import (
 
 	"github.com/ctreminiom/scientific-logs-api/api/config"
 	"github.com/ctreminiom/scientific-logs-api/api/postgres"
+	"github.com/ctreminiom/scientific-logs-api/api/postgres/models"
 	_ "github.com/ctreminiom/scientific-logs-api/docs"
 )
 
@@ -31,6 +32,23 @@ func main() {
 	}
 
 	fmt.Println(db)
+
+	newUser := models.User{
+		ID:            "IDDDD",
+		Consecutive:   "asd",
+		Name:          "asd",
+		Surname:       "asd",
+		SecondSurName: "asd",
+		Phone:         "asd",
+		Username:      "asd",
+		Password:      "asd",
+	}
+
+	err = newUser.Save(db)
+
+	if err != nil {
+		log.Panic(err)
+	}
 
 	r := gin.New()
 	r.Use(gin.Logger())
