@@ -23,15 +23,17 @@ func Connect(user, pass, addr, database string) (*pg.DB, error) {
 
 	models.Migrate(db)
 
-	err := db.Close()
+	/*
+		err := db.Close()
 
-	if err != nil {
-		log.Panic(err)
-	}
+		if err != nil {
+			log.Panic(err)
+		}
 
-	if err != nil {
-		return nil, errors.New("Error while closing the connection, Reason: " + err.Error())
-	}
+		if err != nil {
+			return nil, errors.New("Error while closing the connection, Reason: " + err.Error())
+		}
+	*/
 
 	return db, nil
 }

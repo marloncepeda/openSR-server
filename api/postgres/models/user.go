@@ -1,7 +1,11 @@
 package models
 
 import (
+	"errors"
+	"log"
 	"time"
+
+	"github.com/go-pg/pg"
 )
 
 // User ....
@@ -19,4 +23,19 @@ type User struct {
 
 	CreatedAt time.Time `sql:"default:now()"`
 	UpdatedAt time.Time
+}
+
+// Save saved a User
+func (user *User) Save(db *pg.DB) error {
+
+	err := db.Insert(user)
+
+	if err != nil {
+		return errors.New("Error while inserting the new User " + err.Error())
+	}
+
+	log.Println("User" + user.Name + "Created")
+
+	return nil
+
 }
