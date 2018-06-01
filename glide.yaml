@@ -1,0 +1,9 @@
+package: github.com/ctreminiom/scientific-logs-api
+import:
+- package: github.com/gin-gonic/gin
+  version: v1.2
+- package: github.com/swaggo/gin-swagger
+  subpackages:
+  - swaggerFiles
+- package: github.com/swaggo/swag
+  version: v1.1.1
