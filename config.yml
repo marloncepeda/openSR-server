@@ -1,7 +1,3 @@
-
-
-
-# Training Hyperparams --------------------------------------
 database:
   host: "192.168.0.199"
   database: "prueba"
