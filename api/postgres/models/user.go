@@ -2,7 +2,7 @@ package models
 
 import (
 	"errors"
-	"log"
+	"fmt"
 	"time"
 
 	"github.com/go-pg/pg"
@@ -31,11 +31,9 @@ func (user *User) Save(db *pg.DB) error {
 	err := db.Insert(user)
 
 	if err != nil {
+		fmt.Println(err.Error())
 		return errors.New("Error while inserting the new User " + err.Error())
 	}
-
-	log.Println("User" + user.Name + "Created")
-
 	return nil
 
 }

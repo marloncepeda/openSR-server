@@ -8,26 +8,22 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
+	"os"
 
 	"github.com/spf13/viper"
 )
 
-// AES ...
-type AES struct {
-	encoded string
-	decoded string
-	err     error
-}
-
-var key = []byte(fmt.Sprintf("%v", viper.Get("aes.key")))
-
 // Encrypt ...
-func Encrypt(data string) *AES {
+func Encrypt(data string) string {
 
-	block, err := aes.NewCipher(key)
+	key := fmt.Sprintf("%v", viper.Get("aes.key"))
+
+	block, err := aes.NewCipher([]byte(key))
 
 	if err != nil {
-		return &AES{err: errors.New("Error ocurred:" + err.Error())}
+		log.Panic(errors.New("Error ocurred:" + err.Error()))
+		os.Exit(1)
 	}
 
 	cypher := []byte(data)
@@ -36,33 +32,39 @@ func Encrypt(data string) *AES {
 	iv := blocks[:aes.BlockSize]
 
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return &AES{err: errors.New("Error ocurred:" + err.Error())}
+		log.Panic(errors.New("Error ocurred:" + err.Error()))
+		os.Exit(1)
 	}
 
 	stream := cipher.NewCFBEncrypter(block, iv)
 
 	stream.XORKeyStream(blocks[aes.BlockSize:], cypher)
 
-	return &AES{encoded: base64.URLEncoding.EncodeToString(blocks)}
+	return base64.URLEncoding.EncodeToString(blocks)
 }
 
 // Decrypt ...
-func Decrypt(cypher string) *AES {
+func Decrypt(cypher string) string {
+
+	var key = fmt.Sprintf("%v", viper.Get("aes.key"))
 
 	blocks, err := base64.URLEncoding.DecodeString(cypher)
 
 	if err != nil {
-		return &AES{err: errors.New("Error ocurred:" + err.Error())}
+		log.Panic(errors.New("Error ocurred:" + err.Error()))
+		os.Exit(1)
 	}
 
-	block, err := aes.NewCipher(key)
+	block, err := aes.NewCipher([]byte(key))
 
 	if err != nil {
-		return &AES{err: errors.New("Error ocurred:" + err.Error())}
+		log.Panic(errors.New("Error ocurred:" + err.Error()))
+		os.Exit(1)
 	}
 
 	if len(blocks) < aes.BlockSize {
-		return &AES{err: errors.New("AES blocksize invalid")}
+		log.Panic(errors.New("Error ocurred:" + err.Error()))
+		os.Exit(1)
 	}
 
 	iv := blocks[:aes.BlockSize]
@@ -72,6 +74,6 @@ func Decrypt(cypher string) *AES {
 
 	stream.XORKeyStream(blocks, blocks)
 
-	return &AES{decoded: fmt.Sprintf("%s", blocks)}
+	return fmt.Sprintf("%s", blocks)
 
 }
