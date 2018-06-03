@@ -1,79 +1,88 @@
 package aes
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
 	"encoding/base64"
-	"errors"
-	"fmt"
-	"io"
 	"log"
-	"os"
-
-	"github.com/spf13/viper"
 )
 
 // Encrypt ...
 func Encrypt(data string) string {
 
-	key := fmt.Sprintf("%v", viper.Get("aes.key"))
+	return base64.StdEncoding.EncodeToString([]byte(data))
 
-	block, err := aes.NewCipher([]byte(key))
+	/*
+		key := fmt.Sprintf("%v", viper.Get("aes.key"))
 
-	if err != nil {
-		log.Panic(errors.New("Error ocurred:" + err.Error()))
-		os.Exit(1)
-	}
+		block, err := aes.NewCipher([]byte(key))
 
-	cypher := []byte(data)
+		if err != nil {
+			log.Panic(errors.New("Error ocurred:" + err.Error()))
+			os.Exit(1)
+		}
 
-	blocks := make([]byte, aes.BlockSize+len(cypher))
-	iv := blocks[:aes.BlockSize]
+		cypher := []byte(data)
 
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		log.Panic(errors.New("Error ocurred:" + err.Error()))
-		os.Exit(1)
-	}
+		blocks := make([]byte, aes.BlockSize+len(cypher))
+		iv := make([]byte, 16)
 
-	stream := cipher.NewCFBEncrypter(block, iv)
+		fmt.Println(base64.URLEncoding.EncodeToString(iv))
 
-	stream.XORKeyStream(blocks[aes.BlockSize:], cypher)
+		if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+			log.Panic(errors.New("Error ocurred:" + err.Error()))
+			os.Exit(1)
+		}
 
-	return base64.URLEncoding.EncodeToString(blocks)
+		stream := cipher.NewCFBEncrypter(block, iv)
+
+		stream.XORKeyStream(blocks[aes.BlockSize:], cypher)
+
+		return base64.URLEncoding.EncodeToString(blocks)
+	*/
 }
 
 // Decrypt ...
 func Decrypt(cypher string) string {
 
-	var key = fmt.Sprintf("%v", viper.Get("aes.key"))
-
-	blocks, err := base64.URLEncoding.DecodeString(cypher)
+	data, err := base64.StdEncoding.DecodeString(cypher)
 
 	if err != nil {
-		log.Panic(errors.New("Error ocurred:" + err.Error()))
-		os.Exit(1)
+		log.Fatal("error:", err)
 	}
 
-	block, err := aes.NewCipher([]byte(key))
+	return base64.URLEncoding.EncodeToString(data)
 
-	if err != nil {
-		log.Panic(errors.New("Error ocurred:" + err.Error()))
-		os.Exit(1)
-	}
+	/*
 
-	if len(blocks) < aes.BlockSize {
-		log.Panic(errors.New("Error ocurred:" + err.Error()))
-		os.Exit(1)
-	}
+		var key = fmt.Sprintf("%v", viper.Get("aes.key"))
 
-	iv := blocks[:aes.BlockSize]
-	blocks = blocks[aes.BlockSize:]
+		blocks, err := base64.URLEncoding.DecodeString(cypher)
 
-	stream := cipher.NewCFBDecrypter(block, iv)
+		if err != nil {
+			log.Panic(errors.New("Error ocurred:" + err.Error()))
+			os.Exit(1)
+		}
 
-	stream.XORKeyStream(blocks, blocks)
+		block, err := aes.NewCipher([]byte(key))
 
-	return fmt.Sprintf("%s", blocks)
+		if err != nil {
+			log.Panic(errors.New("Error ocurred:" + err.Error()))
+			os.Exit(1)
+		}
+
+		if len(blocks) < aes.BlockSize {
+			log.Panic(errors.New("Error ocurred:" + err.Error()))
+			os.Exit(1)
+		}
+
+		iv := make([]byte, 16)
+		blocks = blocks[aes.BlockSize:]
+
+		stream := cipher.NewCFBDecrypter(block, iv)
+
+		stream.XORKeyStream(blocks, blocks)
+
+		return fmt.Sprintf("%s", blocks)
+
+	*/
 
 }
