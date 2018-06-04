@@ -24,6 +24,15 @@ func (connection orm) register(c *gin.Context) {
 
 	if isCompleted {
 
+		ifUsed := check(json.Username, connection.database)
+
+		if ifUsed {
+			fmt.Println(ifUsed)
+			fmt.Println("PASOOO")
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Username already exists"})
+			return
+		}
+
 		// Count All user in the database
 		count, _ := connection.database.Model((*models.User)(nil)).Count()
 
@@ -50,6 +59,7 @@ func (connection orm) register(c *gin.Context) {
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": "user created succefully"})
+		return
 
 	}
 

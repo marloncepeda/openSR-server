@@ -1,7 +1,11 @@
 package user
 
 import (
+	"fmt"
+
+	"github.com/ctreminiom/scientific-logs-api/api/postgres/models"
 	"github.com/ctreminiom/scientific-logs-api/api/security/aes"
+	"github.com/go-pg/pg"
 )
 
 type registerTemplate struct {
@@ -22,4 +26,25 @@ func validate(json error) bool {
 	return true
 }
 
+func check(username string, db *pg.DB) bool {
+
+	usernameEncoded := encrypt(username)
+
+	fmt.Println(usernameEncoded)
+
+	user := new(models.User)
+
+	err := db.Model(user).Column("username").Where("username = ?", usernameEncoded).Select()
+
+	fmt.Println(err)
+
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
 func encrypt(text string) string { return aes.Encrypt(text) }
+
+func decrypt(text string) string { return aes.Decrypt(text) }

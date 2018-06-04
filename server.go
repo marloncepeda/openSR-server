@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	// swagger docs
 	"github.com/gin-gonic/gin"
@@ -9,6 +10,8 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	"github.com/ctreminiom/scientific-logs-api/api/config"
+	"github.com/ctreminiom/scientific-logs-api/api/controllers/user"
+	"github.com/ctreminiom/scientific-logs-api/api/postgres"
 	"github.com/ctreminiom/scientific-logs-api/api/security/aes"
 	_ "github.com/ctreminiom/scientific-logs-api/docs"
 )
@@ -21,20 +24,20 @@ func main() {
 		fmt.Println(err.Error())
 	}
 
-	//params := config.Fetch()
+	params := config.Fetch()
 
-	//db, err := postgres.Connect(params.Username, params.Password, params.Addr, params.Database)
+	db, err := postgres.Connect(params.Username, params.Password, params.Addr, params.Database)
 
-	//if err != nil {
-	//	log.Panic(err)
-	//}
+	if err != nil {
+		log.Panic(err)
+	}
 
 	fmt.Println(aes.Encrypt("github.com/ctreminiom/scientific-logs-api/docs"))
 
 	r := gin.New()
 	r.Use(gin.Logger())
 
-	//user.Routes(r, db)
+	user.Routes(r, db)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
