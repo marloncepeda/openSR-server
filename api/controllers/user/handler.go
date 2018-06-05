@@ -3,9 +3,7 @@ package user
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
-	"github.com/ctreminiom/scientific-logs-api/api/postgres/models"
 	"github.com/go-pg/pg"
 
 	"github.com/gin-gonic/gin"
@@ -13,57 +11,41 @@ import (
 )
 
 type orm struct {
-	database *pg.DB
+	db *pg.DB
 }
 
 func (connection orm) register(c *gin.Context) {
 
 	var json registerTemplate
 
-	isCompleted := validate(c.ShouldBindWith(&json, binding.JSON))
+	isValidated := validate(c.ShouldBindWith(&json, binding.JSON))
 
-	if isCompleted {
+	if isValidated {
 
-		ifUsed := check(json.Username, connection.database)
+		code, value := create(json, connection.db)
 
-		if ifUsed {
-			fmt.Println(ifUsed)
-			fmt.Println("PASOOO")
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Username already exists"})
-			return
-		}
+		c.JSON(code, gin.H{"message": value})
 
-		// Count All user in the database
-		count, _ := connection.database.Model((*models.User)(nil)).Count()
-
-		fmt.Println(strconv.Itoa(count + 1))
-
-		fmt.Println(encrypt(strconv.Itoa(count + 1)))
-
-		user := models.User{
-			ID:            encrypt(strconv.Itoa(count + 1)),
-			Consecutive:   encrypt("i"),
-			Name:          encrypt(json.Name),
-			Surname:       encrypt(json.Surname),
-			SecondSurName: encrypt(json.SecondSurname),
-			Phone:         encrypt(json.Phone),
-			Username:      encrypt(json.Username),
-			Password:      encrypt(json.Password),
-		}
-
-		err := user.Save(connection.database)
-
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Username already exists"})
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{"message": "user created succefully"})
-		return
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid parameters"})
 
 	}
 
-	c.JSON(http.StatusBadRequest, gin.H{"message": "invalid parameters"})
+}
+
+func (connection orm) login(c *gin.Context) {
+
+	var json loginTemplate
+
+	isValidated := validate(c.ShouldBindWith(&json, binding.JSON))
+
+	if isValidated {
+
+		username := decrypt(json.Username)
+
+		fmt.Println(username)
+
+	}
 
 }
 
@@ -72,7 +54,9 @@ func Routes(gin *gin.Engine, db *pg.DB) {
 
 	v1 := gin.Group("")
 	{
-		env := &orm{database: db}
+		env := &orm{db: db}
 		v1.POST("/register", env.register)
+		v1.POST("/login", env.register)
+
 	}
 }

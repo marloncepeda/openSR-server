@@ -12,7 +12,7 @@ import (
 	"github.com/ctreminiom/scientific-logs-api/api/config"
 	"github.com/ctreminiom/scientific-logs-api/api/controllers/user"
 	"github.com/ctreminiom/scientific-logs-api/api/postgres"
-	"github.com/ctreminiom/scientific-logs-api/api/security/aes"
+
 	_ "github.com/ctreminiom/scientific-logs-api/docs"
 )
 
@@ -31,8 +31,6 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-
-	fmt.Println(aes.Encrypt("github.com/ctreminiom/scientific-logs-api/docs"))
 
 	r := gin.New()
 	r.Use(gin.Logger())
