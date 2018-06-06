@@ -9,44 +9,6 @@ import (
 	pg "github.com/go-pg/pg"
 )
 
-type registerTemplate struct {
-	Name          string `form:"name" json:"name" binding:"required"`
-	Surname       string `form:"surname" json:"surname" binding:"required"`
-	SecondSurname string `form:"secondSurname" json:"secondSurname" binding:"required"`
-	Phone         string `form:"phone" json:"phone" binding:"required"`
-	Username      string `form:"username" json:"username" binding:"required"`
-	Password      string `form:"password" json:"password" binding:"required"`
-}
-
-type loginTemplate struct {
-	Username string `form:"username" json:"username" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
-}
-
-func validate(json error) bool {
-
-	if json != nil {
-		return false
-	}
-
-	return true
-}
-
-func check(username string, db *pg.DB) bool {
-
-	usernameEncoded := encrypt(username)
-
-	user := new(models.User)
-
-	err := db.Model(user).Column("username").Where("username = ?", usernameEncoded).Select()
-
-	if err != nil {
-		return false
-	}
-
-	return true
-}
-
 func create(body registerTemplate, db *pg.DB) (code int, message string) {
 
 	used := check(body.Username, db)

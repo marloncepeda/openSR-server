@@ -1,9 +1,9 @@
 package user
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/ctreminiom/scientific-logs-api/api/security/jwt"
 	"github.com/go-pg/pg"
 
 	"github.com/gin-gonic/gin"
@@ -18,18 +18,19 @@ func (connection orm) register(c *gin.Context) {
 
 	var json registerTemplate
 
-	isValidated := validate(c.ShouldBindWith(&json, binding.JSON))
+	isValidated := validateHTTPBody(c.ShouldBindWith(&json, binding.JSON))
 
 	if isValidated {
 
 		code, value := create(json, connection.db)
 
 		c.JSON(code, gin.H{"message": value})
-
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid parameters"})
+		return
 
 	}
+
+	c.JSON(http.StatusBadRequest, gin.H{"message": "invalid parameters"})
+	return
 
 }
 
@@ -37,15 +38,24 @@ func (connection orm) login(c *gin.Context) {
 
 	var json loginTemplate
 
-	isValidated := validate(c.ShouldBindWith(&json, binding.JSON))
+	isValidated := validateHTTPBody(c.ShouldBindWith(&json, binding.JSON))
 
 	if isValidated {
 
-		username := decrypt(json.Username)
+		bolean, _ := confirmUsername(json.Username, json.Password, connection.db)
 
-		fmt.Println(username)
+		if bolean {
+			c.JSON(http.StatusOK, gin.H{"message": jwt.Encode(json.Username)})
+			return
+		}
+
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "usernae and password incorrect"})
+		return
 
 	}
+
+	c.JSON(http.StatusBadRequest, gin.H{"message": "invalid parameters"})
+	return
 
 }
 
@@ -56,7 +66,7 @@ func Routes(gin *gin.Engine, db *pg.DB) {
 	{
 		env := &orm{db: db}
 		v1.POST("/register", env.register)
-		v1.POST("/login", env.register)
+		v1.POST("/login", env.login)
 
 	}
 }

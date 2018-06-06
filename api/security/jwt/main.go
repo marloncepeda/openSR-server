@@ -8,7 +8,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-func encode(data string) (string, error) {
+//Encode ...
+func Encode(data string) string {
 
 	key := fmt.Sprintf("%v", viper.Get("jwt.key"))
 
@@ -22,10 +23,10 @@ func encode(data string) (string, error) {
 	tokenString, err := token.SignedString([]byte(key))
 
 	if err != nil {
-		return "", err
+		return ""
 	}
 
-	return tokenString, nil
+	return tokenString
 
 }
 
@@ -45,22 +46,10 @@ func decode(tokenString string) (string, error) {
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 
 		return fmt.Sprintf("%v", claims["foo"]), nil
-
-		//t := time.Unix(1.528174645e+09, 0)
-		//fmt.Println(t)
 	}
 
 	return "", err
 
-}
-
-func validate(token string) string {
-
-	return ""
-}
-
-func refresh(token string) string {
-	return ""
 }
 
 /*

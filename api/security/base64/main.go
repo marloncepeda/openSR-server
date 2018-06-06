@@ -2,6 +2,7 @@ package aes
 
 import (
 	"encoding/base64"
+	"fmt"
 	"log"
 )
 
@@ -49,40 +50,8 @@ func Decrypt(cypher string) string {
 		log.Fatal("error:", err)
 	}
 
+	fmt.Println(base64.URLEncoding.EncodeToString(data))
+
 	return base64.URLEncoding.EncodeToString(data)
-
-	/*
-
-		var key = fmt.Sprintf("%v", viper.Get("aes.key"))
-
-		blocks, err := base64.URLEncoding.DecodeString(cypher)
-
-		if err != nil {
-			log.Panic(errors.New("Error ocurred:" + err.Error()))
-			os.Exit(1)
-		}
-
-		block, err := aes.NewCipher([]byte(key))
-
-		if err != nil {
-			log.Panic(errors.New("Error ocurred:" + err.Error()))
-			os.Exit(1)
-		}
-
-		if len(blocks) < aes.BlockSize {
-			log.Panic(errors.New("Error ocurred:" + err.Error()))
-			os.Exit(1)
-		}
-
-		iv := make([]byte, 16)
-		blocks = blocks[aes.BlockSize:]
-
-		stream := cipher.NewCFBDecrypter(block, iv)
-
-		stream.XORKeyStream(blocks, blocks)
-
-		return fmt.Sprintf("%s", blocks)
-
-	*/
 
 }
