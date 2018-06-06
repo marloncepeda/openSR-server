@@ -3,7 +3,7 @@ package user
 import (
 	"net/http"
 
-	"github.com/ctreminiom/scientific-logs-api/api/security/jwt"
+	"github.com/ctreminiom/openSR-server/api/security/jwt"
 	"github.com/go-pg/pg"
 
 	"github.com/gin-gonic/gin"

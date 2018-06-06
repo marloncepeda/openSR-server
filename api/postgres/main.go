@@ -4,7 +4,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/ctreminiom/scientific-logs-api/api/postgres/models"
+	"github.com/ctreminiom/openSR-server/api/postgres/models"
 	"github.com/go-pg/pg"
 )
 

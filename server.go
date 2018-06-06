@@ -9,27 +9,12 @@ import (
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
-	"github.com/ctreminiom/scientific-logs-api/api/config"
-	"github.com/ctreminiom/scientific-logs-api/api/controllers/user"
-	"github.com/ctreminiom/scientific-logs-api/api/postgres"
+	"github.com/ctreminiom/openSR-server/api/config"
+	"github.com/ctreminiom/openSR-server/api/controllers/user"
+	"github.com/ctreminiom/openSR-server/api/postgres"
 
-	_ "github.com/ctreminiom/scientific-logs-api/docs"
+	_ "github.com/ctreminiom/openSR-server/docs"
 )
-
-// @title Swagger Example API
-// @version 1.0
-// @description This is a sample server celler server.
-// @termsOfService http://swagger.io/terms/
-
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host localhost:8080
-// @BasePath /api/v1
 
 func main() {
 

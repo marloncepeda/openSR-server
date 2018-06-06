@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/ctreminiom/scientific-logs-api/api/postgres/models"
-	base64 "github.com/ctreminiom/scientific-logs-api/api/security/base64"
+	"github.com/ctreminiom/openSR-server/api/postgres/models"
+	base64 "github.com/ctreminiom/openSR-server/api/security/base64"
 	pg "github.com/go-pg/pg"
 )
 

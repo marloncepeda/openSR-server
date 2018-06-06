@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/ctreminiom/scientific-logs-api/api/postgres/models"
+	"github.com/ctreminiom/openSR-server/api/postgres/models"
 	pg "github.com/go-pg/pg"
 )
 
