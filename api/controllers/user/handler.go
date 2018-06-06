@@ -14,7 +14,7 @@ type orm struct {
 	db *pg.DB
 }
 
-func (connection orm) register(c *gin.Context) {
+func (postgres orm) register(c *gin.Context) {
 
 	var json registerTemplate
 
@@ -22,7 +22,7 @@ func (connection orm) register(c *gin.Context) {
 
 	if isValidated {
 
-		code, value := create(json, connection.db)
+		code, value := create(json, postgres.db)
 
 		c.JSON(code, gin.H{"message": value})
 		return
@@ -34,7 +34,7 @@ func (connection orm) register(c *gin.Context) {
 
 }
 
-func (connection orm) login(c *gin.Context) {
+func (postgres orm) login(c *gin.Context) {
 
 	var json loginTemplate
 
@@ -42,7 +42,7 @@ func (connection orm) login(c *gin.Context) {
 
 	if isValidated {
 
-		bolean, _ := confirmUsername(json.Username, json.Password, connection.db)
+		bolean, _ := confirmUsername(json.Username, json.Password, postgres.db)
 
 		if bolean {
 			c.JSON(http.StatusOK, gin.H{"message": jwt.Encode(json.Username)})
@@ -62,7 +62,7 @@ func (connection orm) login(c *gin.Context) {
 // Routes ...
 func Routes(gin *gin.Engine, db *pg.DB) {
 
-	v1 := gin.Group("")
+	v1 := gin.Group("/api/v1/module/user/")
 	{
 		env := &orm{db: db}
 		v1.POST("/register", env.register)
