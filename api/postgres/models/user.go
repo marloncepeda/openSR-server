@@ -3,7 +3,6 @@ package models
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/go-pg/pg"
 )
@@ -21,8 +20,8 @@ type User struct {
 	Username      string `sql:"type:text, unique"`
 	Password      string `sql:"type:text"`
 
-	CreatedAt time.Time `sql:"default:now()"`
-	UpdatedAt time.Time
+	//CreatedAt time.Time `sql:"default:now()"`
+	//UpdatedAt time.Time `sql:"default:now()"`
 }
 
 // Save saved a User
