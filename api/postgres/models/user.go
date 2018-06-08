@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/go-pg/pg"
 )
@@ -19,9 +18,6 @@ type User struct {
 	Phone         string `sql:"type:text"`
 	Username      string `sql:"type:text, unique"`
 	Password      string `sql:"type:text"`
-
-	//CreatedAt time.Time `sql:"default:now()"`
-	//UpdatedAt time.Time `sql:"default:now()"`
 }
 
 // Save saved a User
@@ -30,7 +26,6 @@ func (user *User) Save(db *pg.DB) error {
 	err := db.Insert(user)
 
 	if err != nil {
-		fmt.Println(err.Error())
 		return errors.New("Error while inserting the new User " + err.Error())
 	}
 	return nil

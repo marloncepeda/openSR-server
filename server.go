@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	// swagger docs
+	_ "github.com/ctreminiom/openSR-server/docs"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -12,8 +12,6 @@ import (
 	"github.com/ctreminiom/openSR-server/api/config"
 	"github.com/ctreminiom/openSR-server/api/controllers/user"
 	"github.com/ctreminiom/openSR-server/api/postgres"
-
-	_ "github.com/ctreminiom/openSR-server/docs"
 )
 
 func main() {
@@ -21,7 +19,7 @@ func main() {
 	err := config.Load()
 
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Panic(err)
 	}
 
 	params := config.Fetch()
@@ -33,6 +31,7 @@ func main() {
 	}
 
 	r := gin.New()
+
 	r.Use(gin.Logger())
 
 	user.Routes(r, db)
