@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	// swagger docs
@@ -12,6 +13,7 @@ import (
 	"github.com/ctreminiom/openSR-server/api/config"
 	"github.com/ctreminiom/openSR-server/api/controllers/user"
 	"github.com/ctreminiom/openSR-server/api/postgres"
+	"github.com/ctreminiom/openSR-server/api/security"
 )
 
 func main() {
@@ -29,6 +31,8 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	fmt.Println(security.Encrypt("asdasd"))
 
 	r := gin.New()
 

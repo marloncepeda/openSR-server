@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/ctreminiom/openSR-server/api/postgres/models"
-	base64 "github.com/ctreminiom/openSR-server/api/security/base64"
+	"github.com/ctreminiom/openSR-server/api/security"
 	pg "github.com/go-pg/pg"
 )
 
@@ -41,6 +41,6 @@ func create(body registerTemplate, db *pg.DB) (code int, message string) {
 
 }
 
-func encrypt(text string) string { return base64.Encrypt(text) }
+func encrypt(text string) string { return security.Encrypt(text) }
 
-func decrypt(text string) string { return base64.Decrypt(text) }
+func decrypt(text string) string { return security.Decrypt(text) }

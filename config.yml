@@ -1,3 +1,10 @@
+##############################################################
+encrypt:
+  key: "54io4no4n5op34nio4n35ion4foasnd,asndindgoinonfdiofnio"
+
+jwt:
+  key: "Q7q74DpXkmRQgangVx3Z4BwL5MPJDr6G"
+
 database:
   host: "192.168.0.201"
   database: "science_testing"
@@ -5,10 +12,3 @@ database:
   password: "ctreminio"
   port: 5432
   ssl: "disable"
-
-
-jwt:
-  key: "Q7q74DpXkmRQgangVx3Z4BwL5MPJDr6G"
-
-
-
