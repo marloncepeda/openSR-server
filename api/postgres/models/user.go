@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 )
 
@@ -108,7 +106,7 @@ func (u *User) GetUser(db *gorm.DB) (User, error) {
 	err := db.Where("ID = ?", u.ID).First(&user).Error
 
 	if err != nil {
-		fmt.Println(err.Error())
+		return user, err
 	}
 
 	return user, nil
