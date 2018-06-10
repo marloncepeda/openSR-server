@@ -1,12 +1,14 @@
+#############  {key}  , {key} ##############3
+encrypt:
+  key: "54io4no4n5op34nio4n35ion4foasnd,asndindgoinonfdiofnio"
+
+jwt:
+  key: "Q7q74DpXkmRQgangVx3Z4BwL5MPJDr6G"
+
 database:
-  host: "ec2-18-188-250-148.us-east-2.compute.amazonaws.com"
+  host: "localhost"
   database: "science"
   username: "ctreminio"
   password: "ctreminio"
   port: 5432
   ssl: "disable"
-
-
-jwt:
-  key: "Q7q74DpXkmRQgangVx3Z4BwL5MPJDr6G"
-

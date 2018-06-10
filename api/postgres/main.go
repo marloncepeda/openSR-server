@@ -1,39 +1,21 @@
 package postgres
 
 import (
-	"errors"
-	"log"
+	"github.com/jinzhu/gorm"
+	"github.com/spf13/viper"
 
-	"github.com/ctreminiom/openSR-server/api/postgres/models"
-	"github.com/go-pg/pg"
+	// Postgres gorm driver
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 // Connect ...
-func Connect(user, pass, addr, database string) (*pg.DB, error) {
+func Connect() (*gorm.DB, error) {
 
-	options := &pg.Options{User: user, Password: pass, Addr: addr, Database: database}
+	db, err := gorm.Open("postgres", viper.Get("Connection"))
 
-	db := pg.Connect(options)
-
-	if db == nil {
-		return nil, errors.New("Failed to connect to database")
+	if err != nil {
+		return nil, err
 	}
-
-	log.Printf("Connection to database successful.\n")
-
-	models.Migrate(db)
-
-	/*
-		err := db.Close()
-
-		if err != nil {
-			log.Panic(err)
-		}
-
-		if err != nil {
-			return nil, errors.New("Error while closing the connection, Reason: " + err.Error())
-		}
-	*/
 
 	return db, nil
 }

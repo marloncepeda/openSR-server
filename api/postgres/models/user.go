@@ -1,39 +1,116 @@
 package models
 
 import (
-	"errors"
 	"fmt"
-	"time"
 
-	"github.com/go-pg/pg"
+	"github.com/jinzhu/gorm"
 )
 
-// User ....
+// User ...
 type User struct {
-	tableName struct{} `sql:"users"`
-
-	ID            string `sql:"type:text, pk"`
-	Consecutive   string `sql:"type:text"`
-	Name          string `sql:"type:text"`
-	Surname       string `sql:"type:text"`
-	SecondSurName string `sql:"type:text"`
-	Phone         string `sql:"type:text"`
-	Username      string `sql:"type:text, unique"`
-	Password      string `sql:"type:text"`
-
-	CreatedAt time.Time `sql:"default:now()"`
-	UpdatedAt time.Time
+	ID            string `gorm:"primary_key"`
+	Name          string `gorm:"not null"`
+	Surname       string `gorm:"not null"`
+	SecondSurName string `gorm:"not null"`
+	Phone         string `gorm:"not null"`
+	UserName      string `gorm:"unique; not null; index:username"`
+	Password      string `gorm:"not null"`
 }
 
-// Save saved a User
-func (user *User) Save(db *pg.DB) error {
+// TableName return a table name
+func (User) TableName() string { return "Users" }
 
-	err := db.Insert(user)
+// Save function validate the User struct, and save a new User on the database
+func (u *User) Save(db *gorm.DB) error {
+
+	err := db.Create(u).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UpdatePassword function ....
+func (u *User) UpdatePassword(db *gorm.DB) error {
+
+	err := db.Model(u).Update("password", u.Password).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UpdateFields function ....
+func (u *User) UpdateFields(db *gorm.DB) error {
+
+	err := db.Model(u).Updates(u).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+// Delete ...
+func (u *User) Delete(db *gorm.DB) error {
+
+	err := db.Delete(u).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+// CheckInformation ....
+func (u *User) CheckInformation(db *gorm.DB) error {
+
+	user := User{}
+	user.ID = u.ID
+
+	err := db.First(&user).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+// GetUsers ...
+func (u *User) GetUsers(db *gorm.DB) ([]User, error) {
+
+	var users []User
+
+	err := db.Find(&users).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+// GetUser ...
+func (u *User) GetUser(db *gorm.DB) (User, error) {
+
+	var user User
+
+	err := db.Where("ID = ?", u.ID).First(&user).Error
 
 	if err != nil {
 		fmt.Println(err.Error())
-		return errors.New("Error while inserting the new User " + err.Error())
 	}
-	return nil
+
+	return user, nil
 
 }

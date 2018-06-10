@@ -7,8 +7,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Load ...
-func Load() error {
+// LoadEnvironmentVariables ...
+func LoadEnvironmentVariables() error {
 
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
@@ -19,29 +19,21 @@ func Load() error {
 		return errors.New("Error reading config file " + err.Error())
 	}
 
+	viper.Set("Connection", formatConnectionURL())
+
 	return nil
 
 }
 
-// Parameters ...
-type Parameters struct{ Username, Password, Addr, Database string }
+func formatConnectionURL() string {
 
-// Fetch ...
-func Fetch() *Parameters {
+	host := viper.Get("database.host")
+	port := viper.Get("database.port")
+	user := viper.Get("database.username")
+	db := viper.Get("database.database")
+	pass := viper.Get("database.password")
 
-	return &Parameters{
-		Username: username(),
-		Password: password(),
-		Addr:     address(),
-		Database: database(),
-	}
+	ssl := viper.Get("database.ssl")
 
-}
-
-func username() string { return fmt.Sprintf("%s", viper.Get("database.username")) }
-func password() string { return fmt.Sprintf("%s", viper.Get("database.password")) }
-func database() string { return fmt.Sprintf("%s", viper.Get("database.database")) }
-
-func address() string {
-	return fmt.Sprintf("%s:%v", viper.Get("database.host"), viper.Get("database.port"))
+	return fmt.Sprintf("host=%s port=%v user=%s dbname=%s password=%s sslmode=%s", host, port, user, db, pass, ssl)
 }
