@@ -1,23 +1,21 @@
 package models
 
 import (
-	"errors"
-
-	"github.com/go-pg/pg"
-	"github.com/go-pg/pg/orm"
+	"github.com/jinzhu/gorm"
 )
 
-// Migrate ...
-func Migrate(db *pg.DB) error {
+// Migrate ....
+func Migrate(db *gorm.DB) error {
 
-	options := &orm.CreateTableOptions{IfNotExists: true}
+	if db.HasTable(&User{}) {
+		db.DropTableIfExists(&User{})
+	}
 
-	err := db.CreateTable(&User{}, options)
+	err := db.AutoMigrate(&User{}).Error
 
 	if err != nil {
-		return errors.New("Error while creating tables" + err.Error())
+		return err
 	}
 
 	return nil
-
 }

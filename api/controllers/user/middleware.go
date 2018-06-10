@@ -2,43 +2,49 @@ package user
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/ctreminiom/openSR-server/api/postgres/models"
 	"github.com/ctreminiom/openSR-server/api/security"
-	pg "github.com/go-pg/pg"
+
+	"github.com/jinzhu/gorm"
 )
 
-func create(body registerTemplate, db *pg.DB) (code int, message string) {
+func createUser(body registerJSON, db *gorm.DB) (httpCode int, message string) {
 
-	used := check(body.Username, db)
+	isBeingUsed := checkTheUsernameAvailability(body.Username, db)
 
-	if used {
-		return http.StatusBadRequest, "username already exists"
+	if isBeingUsed {
+		return http.StatusBadRequest, "the user is being used"
 	}
 
-	//Create user
-	count, _ := db.Model((*models.User)(nil)).Count()
+	newUser := new(models.User)
 
-	newUser := models.User{
-		ID:            encrypt(strconv.Itoa(count + 1)),
-		Consecutive:   encrypt("i"),
-		Name:          encrypt(body.Name),
-		Surname:       encrypt(body.Surname),
-		SecondSurName: encrypt(body.SecondSurname),
-		Phone:         encrypt(body.Phone),
-		Username:      encrypt(body.Username),
-		Password:      encrypt(body.Password),
-	}
+	newUser.ID = "sadsad"
+	newUser.Name = body.Name
+	newUser.Surname = body.Surname
+	newUser.SecondSurName = body.SecondSurname
+	newUser.Phone = body.Phone
+	newUser.UserName = body.Username
+	newUser.Password = body.Password
 
 	err := newUser.Save(db)
 
 	if err != nil {
-		return http.StatusBadRequest, err.Error()
+		return http.StatusBadRequest, "LOL"
 	}
 
 	return http.StatusOK, "user created"
 
+	/*
+
+		var count int
+
+		db.Model(user).Count(count)
+
+		fmt.Println(count)
+
+		return http.StatusOK, "user created"
+	*/
 }
 
 func encrypt(text string) string { return security.Encrypt(text) }

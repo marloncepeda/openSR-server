@@ -2,8 +2,70 @@ package user
 
 import (
 	"github.com/ctreminiom/openSR-server/api/postgres/models"
-	pg "github.com/go-pg/pg"
+	"github.com/jinzhu/gorm"
 )
+
+type registerJSON struct {
+	Name          string `form:"name" json:"name" binding:"required"`
+	Surname       string `form:"surname" json:"surname" binding:"required"`
+	SecondSurname string `form:"secondSurname" json:"secondSurname" binding:"required"`
+	Phone         string `form:"phone" json:"phone" binding:"required"`
+	Username      string `form:"username" json:"username" binding:"required"`
+	Password      string `form:"password" json:"password" binding:"required"`
+}
+
+type loginJSON struct {
+	Username string `form:"username" json:"username" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+}
+
+type passwordJSON struct {
+	Username string `form:"username" json:"username" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+}
+
+func validateJSONBody(json error) bool {
+
+	if json != nil {
+		return false
+	}
+
+	return true
+}
+
+func checkTheUsernameAvailability(username string, db *gorm.DB) bool {
+
+	user := new(models.User)
+
+	user.UserName = username
+
+	err := user.CheckInformation(db)
+
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+/*
+usernameEncoded := encrypt(username)
+
+	user := new(models.User)
+
+	err := db.Model(user).Column("username").Where("username = ?", usernameEncoded).Select()
+
+	fmt.Println(err)
+
+	if err != nil {
+		return false
+	}
+
+	return true
+
+*/
+
+/*
 
 type registerTemplate struct {
 	Name          string `form:"name" json:"name" binding:"required"`
@@ -34,6 +96,8 @@ func confirmUsername(username, password string, db *pg.DB) (bool, error) {
 
 	err := db.Model(user).Column("username").Where("username = ?", encrypt(username)).Where("password = ?", encrypt(password)).Select()
 
+	fmt.Println(err)
+
 	if err != nil {
 		return false, err
 	}
@@ -49,9 +113,13 @@ func check(username string, db *pg.DB) bool {
 
 	err := db.Model(user).Column("username").Where("username = ?", usernameEncoded).Select()
 
+	fmt.Println(err)
+
 	if err != nil {
 		return false
 	}
 
 	return true
 }
+
+*/
