@@ -1,4 +1,4 @@
-package models
+package user
 
 import (
 	"github.com/jinzhu/gorm"
@@ -18,8 +18,7 @@ type User struct {
 // TableName return a table name
 func (User) TableName() string { return "Users" }
 
-// Save function validate the User struct, and save a new User on the database
-func (u *User) Save(db *gorm.DB) error {
+func (u *User) save(db *gorm.DB) error {
 
 	err := db.Create(u).Error
 
@@ -30,29 +29,16 @@ func (u *User) Save(db *gorm.DB) error {
 	return nil
 }
 
-// UpdatePassword function ....
-func (u *User) UpdatePassword(db *gorm.DB) error {
+// Update function ....
+func (u *User) update(db *gorm.DB) error {
 
-	err := db.Model(u).Update("password", u.Password).Error
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// UpdateFields function ....
-func (u *User) UpdateFields(db *gorm.DB) error {
-
-	err := db.Model(u).Updates(u).Error
+	err := db.Model(User{}).Updates(u).Error
 
 	if err != nil {
 		return err
 	}
 
 	return nil
-
 }
 
 // Delete ...
@@ -65,27 +51,22 @@ func (u *User) Delete(db *gorm.DB) error {
 	}
 
 	return nil
-
 }
 
-// CheckInformation ....
-func (u *User) CheckInformation(db *gorm.DB) error {
+func (u *User) username(db *gorm.DB) (string, error) {
 
-	user := User{}
-	user.ID = u.ID
+	var user User
 
-	err := db.First(&user).Error
+	err := db.Where("user_name = ?", u.UserName).First(&user).Error
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
-
+	return user.UserName, nil
 }
 
-// GetUsers ...
-func (u *User) GetUsers(db *gorm.DB) ([]User, error) {
+func (u *User) users(db *gorm.DB) ([]User, error) {
 
 	var users []User
 
@@ -98,8 +79,7 @@ func (u *User) GetUsers(db *gorm.DB) ([]User, error) {
 	return users, nil
 }
 
-// GetUser ...
-func (u *User) GetUser(db *gorm.DB) (User, error) {
+func (u *User) user(db *gorm.DB) (User, error) {
 
 	var user User
 
@@ -110,5 +90,31 @@ func (u *User) GetUser(db *gorm.DB) (User, error) {
 	}
 
 	return user, nil
+}
 
+func (u *User) count(db *gorm.DB) (string, error) {
+
+	var user User
+
+	err := db.Select("name, ID").Find(&user).Error
+
+	if err != nil {
+		return "", err
+	}
+
+	return user.ID, nil
+}
+
+// Login ...
+func (u *User) Login(db *gorm.DB) (bool, string) {
+
+	var user User
+
+	err := db.Where("user_name = ? AND password = ?", u.UserName, u.Password).First(&user).Error
+
+	if err != nil {
+		return false, user.ID
+	}
+
+	return true, user.ID
 }

@@ -7,8 +7,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// LoadEnvironmentVariables ...
-func LoadEnvironmentVariables() error {
+// Init ...
+func Init() error {
 
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
@@ -19,21 +19,19 @@ func LoadEnvironmentVariables() error {
 		return errors.New("Error reading config file " + err.Error())
 	}
 
-	viper.Set("Connection", formatConnectionURL())
+	viper.Set("Connection", url())
 
 	return nil
-
 }
 
-func formatConnectionURL() string {
-
-	host := viper.Get("database.host")
-	port := viper.Get("database.port")
-	user := viper.Get("database.username")
-	db := viper.Get("database.database")
-	pass := viper.Get("database.password")
-
-	ssl := viper.Get("database.ssl")
-
-	return fmt.Sprintf("host=%s port=%v user=%s dbname=%s password=%s sslmode=%s", host, port, user, db, pass, ssl)
+func url() string {
+	return fmt.Sprintf(
+		"host=%s port=%v user=%s dbname=%s password=%s sslmode=%s",
+		viper.Get("database.host"),
+		viper.Get("database.port"),
+		viper.Get("database.username"),
+		viper.Get("database.database"),
+		viper.Get("database.password"),
+		viper.Get("database.ssl"),
+	)
 }
