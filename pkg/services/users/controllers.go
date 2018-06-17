@@ -78,3 +78,11 @@ func (c *Context) GetUser(api *gin.Context) {
 
 	api.JSON(200, user)
 }
+
+//Login ....
+func (c *Context) Login(api *gin.Context) {
+
+	code, response := signIn(api.GetHeader("Authorization"), c.db())
+
+	api.JSON(code, response)
+}

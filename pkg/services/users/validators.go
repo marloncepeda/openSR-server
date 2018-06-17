@@ -1,6 +1,9 @@
 package users
 
 import (
+	b64 "encoding/base64"
+	"strings"
+
 	"github.com/ctreminiom/openSR-server/pkg/auth"
 	"github.com/jinzhu/gorm"
 )
@@ -61,6 +64,19 @@ func decode(u users) users {
 	result.UserName = decrypt(u.UserName)
 
 	return result
+}
+
+func format(auth string) (username string, password string) {
+
+	pattern := strings.NewReplacer("Basic", "", " ", "")
+
+	base64 := pattern.Replace(auth)
+
+	data, _ := b64.StdEncoding.DecodeString(base64)
+
+	userInfo := strings.Split(string(data), ":")
+
+	return userInfo[0], userInfo[1]
 }
 
 func encrypt(text string) string { return auth.Encrypt(text) }

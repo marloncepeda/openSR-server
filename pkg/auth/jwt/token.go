@@ -8,9 +8,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-var key = fmt.Sprintf("%v", viper.Get("jwt.key"))
+//Encode ...
+func Encode(id string) (string, error) {
 
-func encode(id string) (string, error) {
+	var key = fmt.Sprintf("%v", viper.Get("jwt.key"))
 
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -22,11 +23,10 @@ func encode(id string) (string, error) {
 
 	token.Claims = claims
 
-	tokenString, err := token.SignedString(key)
+	tokenString, err := token.SignedString([]byte(key))
 
 	if err != nil {
 		return "", err
 	}
-
 	return tokenString, nil
 }

@@ -18,7 +18,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	//Database
+	//Init the database pool
 	db, err := database.Init()
 
 	if err != nil {

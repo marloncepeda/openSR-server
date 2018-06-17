@@ -2,9 +2,11 @@ package users
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/ctreminiom/openSR-server/pkg/auth/jwt"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 )
@@ -144,4 +146,30 @@ func updateUser(data map[string]string, db *gorm.DB) (int, string) {
 		return http.StatusInternalServerError, "Error deleting the user"
 	}
 	return http.StatusOK, fmt.Sprintf("User %s updated", id)
+}
+
+func signIn(auth string, db *gorm.DB) (int, string) {
+
+	username, password := format(auth)
+
+	user := Model{}
+
+	user.UserName = encrypt(username)
+	user.Password = encrypt(password)
+
+	isValid, publicID := user.login(db)
+
+	if isValid {
+
+		token, err := jwt.Encode(publicID)
+
+		if err != nil {
+			log.Panic(err)
+			return http.StatusInternalServerError, "ERROR"
+		}
+
+		return http.StatusOK, token
+	}
+
+	return http.StatusUnauthorized, "Username or password incorrect"
 }

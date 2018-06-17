@@ -9,7 +9,7 @@ import (
 // Export return the gin pointer that has all api routes
 func Export(c *gin.Engine, db *gorm.DB) {
 
-	user := c.Group("/api/v1/")
+	user := c.Group("/api/v1")
 	{
 		gin := users.Context{Pool: db}
 
@@ -21,8 +21,9 @@ func Export(c *gin.Engine, db *gorm.DB) {
 
 		user.DELETE("/users/:public_id", gin.DeleteUser)
 
-		user.PUT("users/:public_id/:field/:value", gin.UpdateUser)
+		user.PUT("/users/:public_id/:field/:value", gin.UpdateUser)
 
+		user.GET("/login", gin.Login)
 	}
 
 }

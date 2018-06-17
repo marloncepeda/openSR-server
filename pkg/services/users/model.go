@@ -134,8 +134,7 @@ func (u *Model) query(where, value string, db *gorm.DB) (users, error) {
 	return user, nil
 }
 
-// Login ...
-func (u *Model) Login(db *gorm.DB) (bool, string) {
+func (u *Model) login(db *gorm.DB) (bool, string) {
 
 	var user Model
 
@@ -145,5 +144,5 @@ func (u *Model) Login(db *gorm.DB) (bool, string) {
 		return false, user.ID
 	}
 
-	return true, user.ID
+	return true, user.PublicID
 }
