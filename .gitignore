@@ -15,3 +15,7 @@
 
 #Ignore Glide golang dependencies
 vendor/
+
+
+#Ignore golang compiled program
+*.sh

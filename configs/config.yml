@@ -1,0 +1,14 @@
+#############  {key}  , {key} ##############3
+encrypt:
+  key: "exa,a3x"
+
+jwt:
+  key: "Q7q74DpXkmRQgangVx3Z4BwL5MPJDr6G"
+
+database:
+  host: "localhost"
+  database: "science"
+  username: "ctreminio"
+  password: "ctreminio"
+  port: 5432
+  ssl: "disable"
