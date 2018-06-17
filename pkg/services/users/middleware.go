@@ -83,6 +83,23 @@ func updateUser(data map[string]string, db *gorm.DB) (int, string) {
 
 	field, value, id := data["field"], data["value"], data["id"]
 
+	variants := []string{"name", "surname", "phone", "password"}
+
+	var isValid bool
+
+	for _, parameter := range variants {
+
+		if parameter == field {
+			isValid = true
+		}
+	}
+
+	isValid = false
+
+	if !isValid {
+		return http.StatusBadRequest, "This field is not allowed in this API"
+	}
+
 	user := Model{}
 	user.PublicID = encrypt(id)
 
