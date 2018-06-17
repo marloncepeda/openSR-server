@@ -64,5 +64,17 @@ func (c *Context) GetAllUsers(api *gin.Context) {
 		return
 	}
 
-	api.JSON(200, decodes(users))
+	api.JSON(200, users)
+}
+
+// GetUser ...
+func (c *Context) GetUser(api *gin.Context) {
+
+	user, err := getUser(api.Param("public_id"), c.db())
+
+	if err != nil {
+		api.JSON(400, "User does not exists")
+	}
+
+	api.JSON(200, user)
 }

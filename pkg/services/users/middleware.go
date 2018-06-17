@@ -57,7 +57,20 @@ func getAllUsers(db *gorm.DB) ([]users, error) {
 		return nil, err
 	}
 
-	return users, nil
+	return decodes(users), nil
+}
+
+func getUser(id string, db *gorm.DB) (users, error) {
+
+	user := Model{}
+
+	result, err := user.query("public_id", encrypt(id), db)
+
+	if err != nil {
+		return result, err
+	}
+
+	return decode(result), nil
 }
 
 func deleteUser(public string, db *gorm.DB) (int, string) {
