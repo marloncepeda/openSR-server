@@ -30,3 +30,16 @@ func Encode(id string) (string, error) {
 	}
 	return tokenString, nil
 }
+
+// Decode ...
+func Decode(token string) (*jwt.Token, error) {
+
+	var key = fmt.Sprintf("%v", viper.Get("jwt.key"))
+
+	data, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+
+		return []byte(key), nil
+	})
+
+	return data, err
+}
