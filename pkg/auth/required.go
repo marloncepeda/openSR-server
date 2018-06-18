@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -17,8 +16,6 @@ func AuthorizationHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		token := c.Request.Header.Get("Authorization")
-
-		fmt.Println(token)
 
 		//Check if the token has the correct format
 		Bearer := "Bearer "

@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 
+	"github.com/ctreminiom/openSR-server/pkg/services/consecutives/types"
 	"github.com/ctreminiom/openSR-server/pkg/services/users"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
@@ -36,7 +37,7 @@ func Init() (*gorm.DB, error) {
 
 func migrate(db *gorm.DB) error {
 
-	err := db.AutoMigrate(&users.Model{}).Error
+	err := db.AutoMigrate(&users.Model{}, &types.Model{}).Error
 
 	if err != nil {
 		return err
